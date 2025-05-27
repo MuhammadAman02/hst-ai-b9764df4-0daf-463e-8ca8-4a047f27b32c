@@ -2,5 +2,9 @@
   {
     "role": "user",
     "content": "The deployment failed with the following error from Fly.io:\n\n{'#10 3.006 error during build:\\n#10 3.006 [vite]: Rollup failed to resolve import \"@stripe/react-stripe-js\" from \"/app/src/components/StripePaymentForm.tsx\".\\n#10 3.006 This is most likely unintended because it can break your application at runtime.'}\n\nPlease fix the issue."
+  },
+  {
+    "role": "user",
+    "content": "The deployment failed with the following error from Fly.io:\n\n{'#10 1.741 error during build:\\n#10 1.741 [vite]: Rollup failed to resolve import \"@stripe/stripe-js\" from \"/app/src/App.tsx\".\\n#10 1.741 This is most likely unintended because it can break your application at runtime.'}\n\nPlease fix the issue."
   }
 ]
