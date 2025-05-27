@@ -2,10 +2,12 @@ import { useState } from "react";
 import { Search, ShoppingBag, Menu, X, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useCart } from "@/contexts/CartContext";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const { getTotalItems, toggleCart } = useCart();
 
   const navigationItems = [
     { name: "New Arrivals", href: "#new" },
@@ -17,7 +19,7 @@ const Header = () => {
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-white border-b border-gray-200">
+    <header className="sticky top-0 z-40 bg-white border-b border-gray-200">
       <div className="container mx-auto px-4">
         {/* Top bar */}
         <div className="flex items-center justify-between py-4">
@@ -71,11 +73,13 @@ const Header = () => {
             </Button>
 
             {/* Shopping bag */}
-            <Button variant="ghost" size="sm" className="relative">
+            <Button variant="ghost" size="sm" className="relative" onClick={toggleCart}>
               <ShoppingBag className="h-5 w-5" />
-              <span className="absolute -top-1 -right-1 bg-luxury-gold text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                0
-              </span>
+              {getTotalItems() > 0 && (
+                <span className="absolute -top-1 -right-1 bg-luxury-gold text-black text-xs rounded-full h-5 w-5 flex items-center justify-center font-semibold">
+                  {getTotalItems()}
+                </span>
+              )}
             </Button>
           </div>
         </div>
