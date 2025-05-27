@@ -1,7 +1,7 @@
-import React, { createContext, useContext, useReducer } from 'react';
+import React, { createContext, useContext, useReducer, ReactNode } from 'react';
 import { Product } from '@/types/product';
 
-interface CartItem {
+export interface CartItem {
   product: Product;
   quantity: number;
   selectedSize: string;
@@ -17,10 +17,10 @@ type CartAction =
   | { type: 'ADD_ITEM'; payload: { product: Product; size: string; color: string } }
   | { type: 'REMOVE_ITEM'; payload: string }
   | { type: 'UPDATE_QUANTITY'; payload: { id: string; quantity: number } }
+  | { type: 'CLEAR_CART' }
   | { type: 'TOGGLE_CART' }
   | { type: 'OPEN_CART' }
-  | { type: 'CLOSE_CART' }
-  | { type: 'CLEAR_CART' };
+  | { type: 'CLOSE_CART' };
 
 const initialState: CartState = {
   items: [],
@@ -59,7 +59,6 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
 
     case 'UPDATE_QUANTITY': {
       const { id, quantity } = action.payload;
-      
       if (quantity <= 0) {
         return {
           ...state,
@@ -79,6 +78,9 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
       };
     }
 
+    case 'CLEAR_CART':
+      return { ...state, items: [] };
+
     case 'TOGGLE_CART':
       return { ...state, isOpen: !state.isOpen };
 
@@ -87,9 +89,6 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
 
     case 'CLOSE_CART':
       return { ...state, isOpen: false };
-
-    case 'CLEAR_CART':
-      return { ...state, items: [], isOpen: false };
 
     default:
       return state;
@@ -101,17 +100,17 @@ interface CartContextType {
   addItem: (product: Product, size: string, color: string) => void;
   removeItem: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
+  clearCart: () => void;
   toggleCart: () => void;
   openCart: () => void;
   closeCart: () => void;
-  clearCart: () => void;
   getTotalItems: () => number;
   getTotalPrice: () => number;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(cartReducer, initialState);
 
   const addItem = (product: Product, size: string, color: string) => {
@@ -129,6 +128,11 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     dispatch({ type: 'UPDATE_QUANTITY', payload: { id, quantity } });
   };
 
+  const clearCart = () => {
+    console.log('Clearing cart');
+    dispatch({ type: 'CLEAR_CART' });
+  };
+
   const toggleCart = () => {
     console.log('Toggling cart');
     dispatch({ type: 'TOGGLE_CART' });
@@ -144,11 +148,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     dispatch({ type: 'CLOSE_CART' });
   };
 
-  const clearCart = () => {
-    console.log('Clearing cart');
-    dispatch({ type: 'CLEAR_CART' });
-  };
-
   const getTotalItems = () => {
     return state.items.reduce((total, item) => total + item.quantity, 0);
   };
@@ -157,24 +156,20 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return state.items.reduce((total, item) => total + (item.product.price * item.quantity), 0);
   };
 
-  return (
-    <CartContext.Provider
-      value={{
-        state,
-        addItem,
-        removeItem,
-        updateQuantity,
-        toggleCart,
-        openCart,
-        closeCart,
-        clearCart,
-        getTotalItems,
-        getTotalPrice,
-      }}
-    >
-      {children}
-    </CartContext.Provider>
-  );
+  const value: CartContextType = {
+    state,
+    addItem,
+    removeItem,
+    updateQuantity,
+    clearCart,
+    toggleCart,
+    openCart,
+    closeCart,
+    getTotalItems,
+    getTotalPrice,
+  };
+
+  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 };
 
 export const useCart = () => {
