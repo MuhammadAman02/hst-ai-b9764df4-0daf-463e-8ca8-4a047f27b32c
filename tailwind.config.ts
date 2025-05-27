@@ -54,16 +54,10 @@ const config: Config = {
         },
         luxury: {
           gold: "#D4AF37",
-          "gold-light": "#F4E4BC",
           "gold-dark": "#B8941F",
           charcoal: "#2C2C2C",
-          "gray-light": "#F8F8F8",
+          cream: "#F8F6F0",
         },
-      },
-      fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
-        serif: ["Playfair Display", "serif"],
-        mono: ["JetBrains Mono", "monospace"],
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -80,7 +74,7 @@ const config: Config = {
           to: { height: "0" },
         },
         "fade-in": {
-          "0%": { opacity: "0", transform: "translateY(10px)" },
+          "0%": { opacity: "0", transform: "translateY(20px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
         "slide-in": {
