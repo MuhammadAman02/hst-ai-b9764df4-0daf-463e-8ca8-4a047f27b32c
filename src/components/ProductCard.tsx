@@ -3,6 +3,8 @@ import { Heart, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Product } from "@/types/product";
+import { useCart } from "@/contexts/CartContext";
+import { useToast } from "@/components/ui/use-toast";
 
 interface ProductCardProps {
   product: Product;
@@ -11,6 +13,8 @@ interface ProductCardProps {
 const ProductCard = ({ product }: ProductCardProps) => {
   const [isLiked, setIsLiked] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const { addItem, openCart } = useCart();
+  const { toast } = useToast();
 
   const handleImageHover = () => {
     if (product.images.length > 1) {
@@ -20,6 +24,22 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
   const handleImageLeave = () => {
     setCurrentImageIndex(0);
+  };
+
+  const handleQuickAdd = () => {
+    // Use first available size and color for quick add
+    const defaultSize = product.sizes[0];
+    const defaultColor = product.colors[0];
+    
+    addItem(product, defaultSize, defaultColor);
+    openCart();
+    
+    toast({
+      title: "Added to cart!",
+      description: `${product.name} in ${defaultColor}, size ${defaultSize}`,
+    });
+    
+    console.log('Quick add clicked for:', product.name);
   };
 
   return (
@@ -34,6 +54,10 @@ const ProductCard = ({ product }: ProductCardProps) => {
           src={product.images[currentImageIndex]}
           alt={product.name}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          onError={(e) => {
+            console.error('Image failed to load:', product.images[currentImageIndex]);
+            e.currentTarget.src = 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=600&fit=crop';
+          }}
         />
         
         {/* Badges */}
@@ -64,7 +88,10 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
         {/* Quick Add Button */}
         <div className="absolute bottom-3 left-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-          <Button className="w-full bg-black hover:bg-gray-800 text-white">
+          <Button 
+            className="w-full bg-black hover:bg-gray-800 text-white"
+            onClick={handleQuickAdd}
+          >
             <ShoppingBag className="h-4 w-4 mr-2" />
             Quick Add
           </Button>
@@ -98,6 +125,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
                                color.toLowerCase() === 'cognac' ? '#9a4444' :
                                color.toLowerCase() === 'midnight blue' ? '#191970' :
                                color.toLowerCase() === 'burgundy' ? '#800020' :
+                               color.toLowerCase() === 'blush' ? '#ffc0cb' :
                                '#d1d5db'
               }}
               title={color}
