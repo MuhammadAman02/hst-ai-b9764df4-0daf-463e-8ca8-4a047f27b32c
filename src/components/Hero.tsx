@@ -2,6 +2,19 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 
 const Hero = () => {
+  const scrollToProducts = () => {
+    const productSection = document.querySelector('#products');
+    if (productSection) {
+      productSection.scrollIntoView({ behavior: 'smooth' });
+    }
+    console.log('Scrolling to products section');
+  };
+
+  const viewLookbook = () => {
+    console.log('View lookbook clicked');
+    // This could navigate to a lookbook page or open a modal
+  };
+
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden">
       {/* Background Image */}
@@ -30,6 +43,7 @@ const Hero = () => {
           <Button 
             size="lg" 
             className="bg-luxury-gold hover:bg-luxury-gold-dark text-black font-semibold px-8 py-3 text-lg"
+            onClick={scrollToProducts}
           >
             Shop Collection
             <ArrowRight className="ml-2 h-5 w-5" />
@@ -39,6 +53,7 @@ const Hero = () => {
             variant="outline" 
             size="lg"
             className="border-white text-white hover:bg-white hover:text-black px-8 py-3 text-lg"
+            onClick={viewLookbook}
           >
             View Lookbook
           </Button>
