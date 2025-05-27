@@ -4,27 +4,20 @@ export interface Product {
   brand: string;
   price: number;
   originalPrice?: number;
+  description: string;
   images: string[];
   category: string;
-  description: string;
   sizes: string[];
   colors: string[];
+  isNew: boolean;
+  onSale: boolean;
+  featured: boolean;
   inStock: boolean;
-  featured?: boolean;
-  isNew?: boolean;
-  onSale?: boolean;
-}
-
-export interface CartItem {
-  product: Product;
-  quantity: number;
-  selectedSize: string;
-  selectedColor: string;
 }
 
 export interface Category {
   id: string;
   name: string;
   slug: string;
-  image: string;
+  description: string;
 }
