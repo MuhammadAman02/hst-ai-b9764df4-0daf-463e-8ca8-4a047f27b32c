@@ -1,13 +1,21 @@
 import { X, Plus, Minus, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
+import { useNavigate } from "react-router-dom";
 
 const CartSidebar = () => {
   const { state, removeItem, updateQuantity, closeCart, getTotalPrice } = useCart();
+  const navigate = useNavigate();
 
   if (!state.isOpen) return null;
 
   const getItemId = (item: any) => `${item.product.id}-${item.selectedSize}-${item.selectedColor}`;
+
+  const handleCheckout = () => {
+    console.log('Proceeding to checkout');
+    closeCart();
+    navigate('/checkout');
+  };
 
   return (
     <>
@@ -72,7 +80,7 @@ const CartSidebar = () => {
                           </Button>
                         </div>
                         <div className="text-right">
-                          <p className="font-medium text-sm">${item.product.price * item.quantity}</p>
+                          <p className="font-medium text-sm">${(item.product.price * item.quantity).toFixed(2)}</p>
                           <Button
                             variant="ghost"
                             size="sm"
@@ -97,7 +105,10 @@ const CartSidebar = () => {
                 <span>Total</span>
                 <span>${getTotalPrice().toFixed(2)}</span>
               </div>
-              <Button className="w-full bg-luxury-gold hover:bg-luxury-gold-dark text-black">
+              <Button 
+                className="w-full bg-luxury-gold hover:bg-luxury-gold-dark text-black"
+                onClick={handleCheckout}
+              >
                 Checkout
               </Button>
               <Button variant="outline" className="w-full" onClick={closeCart}>
